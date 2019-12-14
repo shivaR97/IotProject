@@ -13,26 +13,17 @@
   $sql= "SELECT * FROM (
     SELECT * FROM `log` order by `Sl_pK` desc limit 20
 ) tmp order by tmp.`Sl_pK` asc";
-  $humidData=array();
-  $tempData=array();
+  $waterData=array();
   $moistData=array();
-  $lightData=array();
   $res2=mysqli_query($conn, $sql);
     while ($row = $res2->fetch_assoc()){
-      array_push($humidData,
+      array_push($waterData,
                     array(
-                        "y" => $row["humid"],
+                        "y" => $row["waterLevel"],
                         "label" => $row["Date"].' '.substr($row['Time'],0,5)
 
                     )
                 );
-                array_push($tempData,
-                              array(
-                                  "y" => $row["temp"],
-                                  "label" => $row["Date"].' '.substr($row['Time'],0,5)
-
-                              )
-                          );
                           array_push($moistData,
                                         array(
                                             "y" => $row["moist"],
@@ -40,13 +31,7 @@
 
                                         )
                                     );
-                                    array_push($lightData,
-                                                  array(
-                                                      "y" => $row["light"],
-                                                      "label" => $row["Date"].' '.substr($row['Time'],0,5)
-
-                                                  )
-                                              );
+                           
     }
     //echo '<br/> ';
     //print_r($humidData);
@@ -55,30 +40,19 @@
     <script>
 window.onload = function () {
 
-var chartHumid = new CanvasJS.Chart("charthumidContainer", {
+var chartWater = new CanvasJS.Chart("chartwaterContainer", {
 	title: {
-		text: "Humidity"
+		text: "Water Level"
 	},
 	axisY: {
-		title: "humidity"
+		title: "Water level"
 	},
 	data: [{
 		type: "line",
-		dataPoints: <?php echo json_encode($humidData, JSON_NUMERIC_CHECK); ?>
+		dataPoints: <?php echo json_encode($waterData, JSON_NUMERIC_CHECK); ?>
 	}]
 });
-var chartTemp = new CanvasJS.Chart("charttempContainer", {
-	title: {
-		text: "Temperature"
-	},
-	axisY: {
-		title: "Temperature"
-	},
-	data: [{
-		type: "line",
-		dataPoints: <?php echo json_encode($tempData, JSON_NUMERIC_CHECK); ?>
-	}]
-});
+
 var chartMoisture = new CanvasJS.Chart("chartMoistureContainer", {
 	title: {
 		text: "Moisture"
@@ -91,21 +65,7 @@ var chartMoisture = new CanvasJS.Chart("chartMoistureContainer", {
 		dataPoints: <?php echo json_encode($moistData, JSON_NUMERIC_CHECK); ?>
 	}]
 });
-var chartLight = new CanvasJS.Chart("chartLightContainer", {
-	title: {
-		text: "Light"
-	},
-	axisY: {
-		title: "Light"
-	},
-	data: [{
-		type: "line",
-		dataPoints: <?php echo json_encode($lightData, JSON_NUMERIC_CHECK); ?>
-	}]
-});
-chartHumid.render();
-chartTemp.render();
-chartLight.render();
+chartWater.render();
 chartMoisture.render();
 
 }
@@ -123,26 +83,18 @@ chartMoisture.render();
               <h4>Latest reading</h4>
             </center>
             <div class="row">
-              <div class="col l3 s6">
+              <div class="col l6 s6">
                 <h5>
-                  Humidity:<span class="humidPrevious"> <?php echo $row['humid'].'%'; ?></span>
+                  Water Level:<span class="waterPrevious"> <?php echo $row['waterLevel'].'%'; ?></span>
                 </h5>
               </div>
-              <div class="col l3 s6">
-                <h5>
-                  Temperature:<span class="tempPrevious"><?php echo $row['temp']." C"; ?></span>
-                </h5>
-              </div>
-              <div class="col l3 s6">
+
+              <div class="col l6 s6">
                 <h5>
                   Moisture: <span class="moistPrevious"><?php echo $row['moist']."%"; ?></span>
                 </h5>
               </div>
-              <div class="col l3 s6">
-                <h5>
-                  Light:<span class="lightPrevious"><?php echo $row['light']."%"; ?></span>
-                </h5>
-              </div>
+
 
             </div>
           </div>
@@ -157,20 +109,13 @@ chartMoisture.render();
     </center>
 
     <div class="col s12 l6">
-        <div id="charthumidContainer" class="chart"></div>
+        <div id="chartwaterContainer" class="chart"></div>
     </div>
-    <div class="col s12 l6">
-        <div id="charttempContainer" class="chart"></div>
-    </div>
-  </div>
-  <div class="row">
     <div class="col s12 l6">
         <div id="chartMoistureContainer" class="chart"></div>
     </div>
-    <div class="col s12 l6">
-        <div id="chartLightContainer" class="chart"></div>
-    </div>
   </div>
+  
 </div>
 
 </body>

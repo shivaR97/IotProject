@@ -5,13 +5,11 @@ include ('includes/db-connect.php');
    //echo " Date:".$d."<BR>";
    $t = date("H:i:s");
 
-   if(!empty($_GET['humid']) && !empty($_GET['temp']) && !empty($_GET['moisture']) && !empty($_GET['light'])) {
-     $humid = $_GET['humid'];
-     $temp = $_GET['temp'];
+   if(!empty($_GET['waterLevel']) && !empty($_GET['moisture']) ) {
+     $waterLevel = $_GET['waterLevel'];
      $moist = $_GET['moisture'];
-     $light = $_GET['light'];
 
-     $sql = "INSERT INTO log (humid, temp,moist,light, Date, Time) VALUES ('".$humid."', '".$temp."','".$moist."', '".$light."', '".$d."', '".$t."')";
+     $sql = "INSERT INTO log (waterLevel, moist, Date, Time) VALUES ('".$waterLevel."','".$moist."', '".$d."', '".$t."')";
 
    if (mysqli_query($conn,$sql)) {
        echo "OK";
